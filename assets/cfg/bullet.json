@@ -1,0 +1,15 @@
+{
+    "bullet":{
+        "sound" : "assets/snd/laser.ogg",
+        "image": "assets/img/bullet.png",
+        "velocity": 200
+    },
+
+    "bullet_special":{
+        "sound" : "assets/snd/laser_special.ogg",
+        "image": "assets/img/bullet_special.png",
+        "velocity": 200,
+        "special_time": 2.5
+    }
+
+}

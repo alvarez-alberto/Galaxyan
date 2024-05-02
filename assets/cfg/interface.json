@@ -1,0 +1,62 @@
+{
+    "paused":{
+        "text": "PAUSA",
+        "font": "assets/fnt/PressStart2P.ttf",
+        "color":{
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "size": 20,
+        "position": {
+            "x": 520,
+            "y": 25
+        }
+    },
+
+    "title":{
+        "text": "OVNI",
+        "font": "assets/fnt/PressStart2P.ttf",
+        "color":{
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "size": 20,
+        "position": {
+            "x": 25,
+            "y": 25
+        }
+    },
+
+    "description":{
+        "text": "Controels: Flechas , Pausa: P, Disparar: Click Izq, Especial: Click Der",
+        "font": "assets/fnt/PressStart2P.ttf",
+        "color":{
+            "r": 255,
+            "g": 255,
+            "b": 0
+        },
+        "size": 8,
+        "position": {
+            "x": 25,
+            "y": 70
+        }
+    },
+
+    "bullet_special":{
+        "text_title": "Disparo especial",
+        "text": "100%",
+        "font": "assets/fnt/PressStart2P.ttf",
+        "color":{
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "size": 12,
+        "position": {
+            "x": 20,
+            "y": 310
+        }
+    }
+}
