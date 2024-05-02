@@ -1,0 +1,83 @@
+{
+    "enemy_01": {
+        "image": "assets/img/invaders_enemy_01.png",
+        "animations": {
+            "number_frames": 5,
+            "list": [
+                {
+                    "name": "IDLE",
+                    "start": 0,
+                    "end": 4,
+                    "framerate": 3
+                },
+                {
+                    "name": "ATTACK",
+                    "start": 0,
+                    "end": 0,
+                    "framerate": 1
+                }
+            ]
+        }
+    },
+    "enemy_02": {
+        "image": "assets/img/invaders_enemy_02.png",
+        "animations": {
+            "number_frames": 5,
+            "list": [
+                {
+                    "name": "IDLE",
+                    "start": 0,
+                    "end": 4,
+                    "framerate": 3
+                },
+                {
+                    "name": "ATTACK",
+                    "start": 0,
+                    "end": 0,
+                    "framerate": 1
+                }
+            ]
+        }
+    },
+    "enemy_03": {
+        "image": "assets/img/invaders_enemy_03.png",
+        "animations": {
+            "number_frames": 5,
+            "list": [
+                {
+                    "name": "IDLE",
+                    "start": 0,
+                    "end": 4,
+                    "framerate": 3
+                },
+                {
+                    "name": "ATTACK",
+                    "start": 0,
+                    "end": 0,
+                    "framerate": 1
+                }
+            ]
+        }
+    },
+    "enemy_04": {
+        "image": "assets/img/invaders_enemy_04.png",
+        "animations": {
+            "number_frames": 1,
+            "list": [
+                {
+                    "name": "IDLE",
+                    "start": 0,
+                    "end": 0,
+                    "framerate": 3
+                },
+                {
+                    "name": "ATTACK",
+                    "start": 0,
+                    "end": 0,
+                    "framerate": 1
+                }
+            ]
+        }
+    },
+    "launch_sound": "assets/snd/enemy_launch.ogg"
+}

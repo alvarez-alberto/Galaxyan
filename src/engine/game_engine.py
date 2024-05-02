@@ -1,36 +1,22 @@
+
+
 import asyncio
 import json
 import os
 import pygame
-import esper
-from src.create.prefab_creator import crear_cuadrado, crear_input_player, crear_spawn_enemigos, create_bullet, create_bullet_special, create_description_text, create_paused_text, create_player_square, create_special_bullet_counter, create_special_bullet_title, create_title_text
-from src.ecs.components.c_input_command import CInputCommand, CommandPhase
-from src.ecs.components.c_special_count import CSpecialCount
-from src.ecs.components.c_surface import CSurface
-from src.ecs.components.c_transform import CTransform
-from src.ecs.components.c_velocity import CVelocity
-from src.ecs.components.tag.c_tag_bullet import CTagBullet
-from src.ecs.systems.s_animation import system_animation
-from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
-from src.ecs.systems.s_collision_player_enemy import system_collision_player_enemy
-from src.ecs.systems.s_enemy_spawner import system_enemy_spawner
-from src.ecs.systems.s_explosion import system_explosion
-from src.ecs.systems.s_hunter_state import sytem_hunter_state
-from src.ecs.systems.s_input_player import system_input_player
-from src.ecs.systems.s_movement import system_movement
-from src.ecs.systems.s_player_state import system_player_state
-from src.ecs.systems.s_rendering import system_rendering
-from src.ecs.systems.s_screen_bullet import system_screen_bullet
-from src.ecs.systems.s_screen_enemy import system_screen_enemy
-from src.ecs.systems.s_screen_player import system_screen_player
-from src.ecs.systems.s_special_counter_text import system_special_counter_text 
+
+from src.ecs.components.c_input_command import CInputCommand
+from src.engine.game.scene_menu import SceneMenu
+from src.engine.game.scene_play import ScenePlay
+from src.engine.scenes.scene import Scene
+
 
 class GameEngine:
 
     CONFIG_PATH = "assets/cfg"
     INTERFACE_CONFIG = "interface.json"
-    STARFIELD_CONFIG = "starfield.json"
     WINDOW_CONFIG = "window.json"
+    PLAYER_CONFIG = "player.json"
 
     def __init__(self) -> None:
         
@@ -50,18 +36,19 @@ class GameEngine:
         self.is_running = False
         self.framerate = self.window_cfg["framerate"]
         self.delta_time = 0
-        self.ecs_world = esper.World()
+
+        self._scenes:dict[str, Scene] = {}
+        self._scenes["MENU_SCENE"] = SceneMenu(self)
+        self._scenes["PLAY_SCENE"] = ScenePlay(self)
+        self._current_scene:Scene = None
+        self._scene_name_to_switch:str = None
 
     def files_json_config(self):
         with open(os.path.join(self.CONFIG_PATH, self.WINDOW_CONFIG), encoding="utf-8") as window_config:
             self.window_cfg = json.load(window_config)
             
-        with open(os.path.join(self.CONFIG_PATH, self.STARFIELD_CONFIG)) as starfield_config:
-            self.starfield_cfg = json.load(starfield_config)
-            
-        with open(os.path.join(self.CONFIG_PATH, self.INTERFACE_CONFIG)) as interface_config:
-            self.interface_cfg = json.load(interface_config)
-
+        with open(os.path.join(self.CONFIG_PATH, self.PLAYER_CONFIG), encoding="utf-8") as player_config:
+            self.player_cfg = json.load(player_config)
 
     async def run(self) -> None:
         self._create()
@@ -71,11 +58,15 @@ class GameEngine:
             self._process_events()
             self._update()
             self._draw()
+            self._handle_switch_scene()
             await asyncio.sleep(0)
         self._clean()
 
+    def switch_scene(self, new_scene_name:str):
+        self._scene_name_to_switch = new_scene_name
+
     def _create(self):
-        pass
+        self._current_scene.do_create()
 
     def _calculate_time(self):
         self.clock.tick(self.framerate)
@@ -83,12 +74,12 @@ class GameEngine:
 
     def _process_events(self):
         for event in pygame.event.get():
+            self._current_scene.do_process_events(event)
             if event.type == pygame.QUIT:
                 self.is_running = False
 
     def _update(self):
-        pass
-
+        self._current_scene.simulate(self.delta_time)
 
     def _draw(self):
         screen_color = self.window_cfg["bg_color"]
@@ -97,12 +88,20 @@ class GameEngine:
         blue = screen_color["b"]
 
         self.screen.fill((red,green,blue))
-        system_rendering(self.ecs_world,self.screen)
+        self._current_scene.do_draw(self.screen)
         pygame.display.flip()
 
-    def _clean(self):
-        self.ecs_world.clear_database()
-        pygame.quit()
+    def _handle_switch_scene(self):
+        if self._scene_name_to_switch is not None:
+            self._current_scene.clean()
+            self._current_scene = self._scenes[self._scene_name_to_switch]
+            self._current_scene.do_create()
+            self._scene_name_to_switch = None
 
-    def _do_action(self, c_input:CInputCommand):
-        pass
+    def _do_action(self, action:CInputCommand):        
+        self._current_scene.do_action(action)
+
+    def _do_clean(self):
+        if self._current_scene is not None:
+            self._current_scene.clean()
+        pygame.quit()
