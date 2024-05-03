@@ -32,10 +32,10 @@ class GameEngine:
         self.screen = pygame.display.set_mode(
             (width, height),pygame.SCALED
         )
-        self.clock = pygame.time.Clock()
+        self._clock = pygame.time.Clock()
         self.is_running = False
-        self.framerate = self.window_cfg["framerate"]
-        self.delta_time = 0
+        self._framerate = self.window_cfg["framerate"]
+        self._delta_time = 0
 
         self._scenes:dict[str, Scene] = {}
         self._scenes["MENU_SCENE"] = SceneMenu(self)
@@ -50,9 +50,10 @@ class GameEngine:
         with open(os.path.join(self.CONFIG_PATH, self.PLAYER_CONFIG), encoding="utf-8") as player_config:
             self.player_cfg = json.load(player_config)
 
-    async def run(self) -> None:
-        self._create()
+    async def run(self, start_scene_name:str) -> None:
         self.is_running = True
+        self._current_scene = self._scenes[start_scene_name]
+        self._create()
         while self.is_running:
             self._calculate_time()
             self._process_events()
@@ -69,8 +70,8 @@ class GameEngine:
         self._current_scene.do_create()
 
     def _calculate_time(self):
-        self.clock.tick(self.framerate)
-        self.delta_time = self.clock.get_time() / 1000.0
+        self._clock.tick(self._framerate)
+        self._delta_time = self._clock.get_time() / 1000.0
 
     def _process_events(self):
         for event in pygame.event.get():
@@ -79,7 +80,7 @@ class GameEngine:
                 self.is_running = False
 
     def _update(self):
-        self._current_scene.simulate(self.delta_time)
+        self._current_scene.simulate(self._delta_time)
 
     def _draw(self):
         screen_color = self.window_cfg["bg_color"]
