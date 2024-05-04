@@ -50,6 +50,7 @@ class GameEngine:
         with open(os.path.join(self.CONFIG_PATH, self.PLAYER_CONFIG), encoding="utf-8") as player_config:
             self.player_cfg = json.load(player_config)
 
+
     async def run(self, start_scene_name:str) -> None:
         self.is_running = True
         self._current_scene = self._scenes[start_scene_name]
@@ -61,7 +62,7 @@ class GameEngine:
             self._draw()
             self._handle_switch_scene()
             await asyncio.sleep(0)
-        self._clean()
+        self._do_clean()
 
     def switch_scene(self, new_scene_name:str):
         self._scene_name_to_switch = new_scene_name

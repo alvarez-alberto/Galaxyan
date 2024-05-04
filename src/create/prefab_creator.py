@@ -1,4 +1,3 @@
-
 import random
 import esper
 import pygame
@@ -36,20 +35,6 @@ def crear_enemigo(ecs_world:esper.World,new_enemy_info:dict,pos:pygame.Vector2):
         ServiceLocator.sounds_service.play(new_enemy_info["sound"])
 
 
-def create_player(world: esper.World, player_config:dict):
-        surface = ServiceLocator.images_service.get(player_config["image"])
-        pos = pygame.Vector2(player_config["spawn_point"]["x"],  
-                                player_config["spawn_point"]["y"])
-        vel = pygame.Vector2(0, 0)
-        player_entity = create_sprite(world, pos, vel, surface)
-        world.add_component(player_entity, CTagPlayer(player_config["input_speed"]))
-        world.add_component(player_entity, CPlayerState(player_config["lives"]))
-        player_tr = world.component_for_entity(player_entity, CTransform)
-        player_v = world.component_for_entity(player_entity, CVelocity)
-        player_tag = world.component_for_entity(player_entity, CTagPlayer)
-        player_state = world.component_for_entity(player_entity, CPlayerState)
-        return (player_entity, player_tr, player_v, player_tag, player_state)
-
 def crear_input_player(ecs_world:esper.World):
         input_left = ecs_world.create_entity()
         input_right = ecs_world.create_entity()
@@ -67,7 +52,11 @@ def crear_input_player(ecs_world:esper.World):
         ecs_world.add_component(input_key_p, CInputCommand("PAUSE", pygame.K_p))
         ecs_world.add_component(input_click_right, CInputCommand("PLAYER_SPECIAL_FIRE", pygame.BUTTON_RIGHT))
 
-
+def create_text(ecs_world:esper.World, text:str, font:pygame.font.Font, color:pygame.Color, position:pygame.Vector2):
+        text_entity = ecs_world.create_entity()
+        ecs_world.add_component(text_entity,CTransform(position))
+        ecs_world.add_component(text_entity,CSurface.from_text(text, font, color))
+        return text_entity
 
 
 
