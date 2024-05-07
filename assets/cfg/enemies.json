@@ -79,5 +79,7 @@
             ]
         }
     },
-    "launch_sound": "assets/snd/enemy_launch.ogg"
+    "launch_sound": "assets/snd/enemy_launch.ogg",
+    "velocity_start": 10,
+    "velocity_launch": 10
 }
