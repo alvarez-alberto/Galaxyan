@@ -2,7 +2,7 @@ import json
 
 import pygame
 import esper
-from src.create.prefab_creator import create_sprite
+from src.create.util_creator import create_sprite
 from src.ecs.components.c_player_state import CPlayerState
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
