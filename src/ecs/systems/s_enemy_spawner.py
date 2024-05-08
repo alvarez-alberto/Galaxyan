@@ -1,7 +1,7 @@
 
 import esper
 import pygame
-from src.create.prefab_creator import crear_enemigo, create_hunter
+from src.create.util_creator import crear_enemigo, create_hunter
 from src.ecs.components.c_enemy_spawner import CEnemySpawner, EnemySpawnEvent
 
 def system_enemy_spawner(world:esper.World, enemy_data:dict, delta_time:float ):

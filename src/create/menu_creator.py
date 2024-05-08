@@ -2,7 +2,7 @@ import json
 
 import pygame
 import esper
-from src.create.prefab_creator import create_sprite, create_text
+from src.create.util_creator import create_sprite, create_text
 from src.ecs.components.c_velocity import CVelocity
 from src.engine.service_locator import ServiceLocator
 
