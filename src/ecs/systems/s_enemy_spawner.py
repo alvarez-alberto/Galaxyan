@@ -5,7 +5,7 @@ import pygame
 from src.create.enemy_creator import create_enemy
 from src.ecs.components.c_enemy_spawner import CEnemySpawner, EnemySpawnEvent
 
-def system_enemy_spawner(world:esper.World, enemy_data:dict, delta_time:float ):
+def system_enemy_spawner(world:esper.World, enemy_data:dict, delta_time:float):
     components = world.get_component(CEnemySpawner)
 
     c_enemyspw:CEnemySpawner

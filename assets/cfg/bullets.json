@@ -17,11 +17,17 @@
             "w": 1,
             "h": 3
         },
-        "velocity": 0,
+        "velocity": 30,
         "color": {
             "r": 255,
             "g": 255,
             "b": 255
-        }
+        },
+        "max_enemy_shoot_same_time": 3,
+        "min_bullets": 2,
+        "max_bullets": 6,
+        "start_time": 3.0,
+        "time_attack_min": 0.5,
+        "time_attack_max": 1.0
     }
 }

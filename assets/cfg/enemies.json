@@ -80,7 +80,7 @@
         }
     },
     "launch_sound": "assets/snd/enemy_launch.ogg",
-    "velocity_start": 5,
+    "velocity_start": 15,
     "limit_left": 15,
     "limit_right": 230,
     "velocity_launch": 10
