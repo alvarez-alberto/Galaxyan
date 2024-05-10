@@ -1,11 +1,11 @@
 {
     "player": {
-        "sound": "assets/snd/player_shoot.ogg",
+        "sound": "assets/snd/player_shoot.ogg",       
         "size": {
             "w": 1,
             "h": 3
         },
-        "velocity": 0,
+        "velocity": 400,
         "color": {
             "r": 255,
             "g": 255,

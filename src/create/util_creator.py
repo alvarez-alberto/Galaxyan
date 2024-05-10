@@ -10,6 +10,7 @@ from src.ecs.components.c_player_state import CPlayerState
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
+from src.ecs.components.tag.c_tag_bullet import CTagBullet
 from src.ecs.components.tag.c_tag_enemy import CTagEnemy
 from src.ecs.components.tag.c_tag_player import CTagPlayer
 from src.ecs.components.tag.c_tag_star import CTagStar
@@ -40,20 +41,13 @@ def crear_enemigo(ecs_world:esper.World,new_enemy_info:dict,pos:pygame.Vector2):
 
 def crear_input_player(ecs_world:esper.World):
         input_left = ecs_world.create_entity()
-        input_right = ecs_world.create_entity()
-        input_up = ecs_world.create_entity()
-        input_down = ecs_world.create_entity()
-        input_click_left = ecs_world.create_entity()
-        input_key_p = ecs_world.create_entity()
-        input_click_right = ecs_world.create_entity()
+        input_right = ecs_world.create_entity()      
+        input_key_z = ecs_world.create_entity()       
 
         ecs_world.add_component(input_left, CInputCommand("PLAYER_LEFT", pygame.K_LEFT))
-        ecs_world.add_component(input_right, CInputCommand("PLAYER_RIGHT", pygame.K_RIGHT))
-        ecs_world.add_component(input_up, CInputCommand("PLAYER_UP", pygame.K_UP))
-        ecs_world.add_component(input_down, CInputCommand("PLAYER_DOWN", pygame.K_DOWN))
-        ecs_world.add_component(input_click_left, CInputCommand("PLAYER_FIRE", pygame.BUTTON_LEFT))
-        ecs_world.add_component(input_key_p, CInputCommand("PAUSE", pygame.K_p))
-        ecs_world.add_component(input_click_right, CInputCommand("PLAYER_SPECIAL_FIRE", pygame.BUTTON_RIGHT))
+        ecs_world.add_component(input_right, CInputCommand("PLAYER_RIGHT", pygame.K_RIGHT)) 
+        ecs_world.add_component(input_key_z, CInputCommand("PLAYER_FIRE", pygame.K_z))
+
 
 def create_text(ecs_world:esper.World, text:str, font:pygame.font.Font, color:pygame.Color, position:pygame.Vector2):
         text_entity = ecs_world.create_entity()
@@ -100,6 +94,8 @@ def create_stars_background(ecs_world: esper.World) -> None:
                 ecs_world.add_component(star_entity, CTransform(pos))
                 ecs_world.add_component(star_entity, CVelocity(vel))
                 ecs_world.add_component(star_entity, CBlink(blink_rate))
+
+
 
 
 
