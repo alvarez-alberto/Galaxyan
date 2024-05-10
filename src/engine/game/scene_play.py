@@ -2,10 +2,9 @@
 import json
 import pygame
 from src.create.play_creator import create_bullet, create_player
-from src.create.prefab_creator import crear_input_player
-from src.create.util_creator import create_stars_background
+from src.create.util_creator import crear_input_player, create_stars_background
 from src.ecs.components.c_bullet_state import CBulletState
-from src.ecs.components.c_input_command import CInputCommand
+from src.ecs.components.c_input_command import CInputCommand, CommandPhase
 from src.ecs.systems.s_blink import system_blink
 from src.ecs.systems.s_starfield import system_starfield
 from src.ecs.components.c_velocity import CVelocity
