@@ -81,7 +81,7 @@ class GameEngine:
                 self.is_running = False
 
     def _update(self):
-        self._current_scene.simulate(self._delta_time)
+        self._current_scene.simulate(self._delta_time,self.screen)
 
     def _draw(self):
         screen_color = self.window_cfg["bg_color"]

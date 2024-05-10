@@ -17,5 +17,5 @@ class SceneMenu(Scene):
         if action.name == "START" and action.phase == CommandPhase.START:
             self.switch_scene("PLAY_SCENE")
 
-    def do_update(self, delta_time: float):
+    def do_update(self, delta_time: float,screen:pygame.Surface):
         pass
