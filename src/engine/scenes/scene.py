@@ -15,8 +15,8 @@ class Scene:
     def do_process_events(self, event:pygame.event):
         system_input_player(self.ecs_world, event, self.do_action)
 
-    def simulate(self, delta_time):
-        self.do_update(delta_time)
+    def simulate(self, delta_time,screen):
+        self.do_update(delta_time,screen)
         self.ecs_world._clear_dead_entities()
 
     def clean(self):
@@ -29,7 +29,7 @@ class Scene:
     def do_create(self):
         pass
 
-    def do_update(self, delta_time:float):
+    def do_update(self, delta_time:float,screen:pygame.Surface):
         pass
 
     def do_draw(self, screen):
