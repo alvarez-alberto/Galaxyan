@@ -24,5 +24,15 @@
     "blink_rate": {
         "min": 0.25,
         "max": 0.5
+    },
+    "pos":{
+        "x_left":10,
+        "x_right":246,
+        "y_top":10,
+        "y_bottom":230
+    },
+    "size":{
+        "x":1,
+        "y":1
     }
 }
