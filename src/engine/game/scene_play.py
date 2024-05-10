@@ -14,6 +14,7 @@ from src.ecs.systems.s_movement import system_movement
 from src.ecs.systems.s_screen_bullet import system_screen_bullet
 from src.ecs.systems.s_screen_player import system_screen_player
 from src.engine.scenes.scene import Scene
+from src.engine.service_locator import ServiceLocator
 
 class ScenePlay(Scene):
     
@@ -67,7 +68,8 @@ class ScenePlay(Scene):
                         bullet_vel.vel.x -= self.pl_input_v
 
         if action.name == "PLAYER_FIRE":
-            if action.phase == CommandPhase.START:         
+            if action.phase == CommandPhase.START: 
+                ServiceLocator.sounds_service.play(self.bullet_cfg["player"]["sound"])        
                 system_fire_bullet(self.ecs_world,self.bullet_cfg["player"]["velocity"])
                 for bullet_entity, _ in self.ecs_world.get_component(CTagBullet):
                     bullet_state = self.ecs_world.component_for_entity(bullet_entity, CBulletState)
