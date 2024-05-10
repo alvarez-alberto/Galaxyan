@@ -1,6 +1,6 @@
 import esper, pygame
 
-from src.create.prefab_creator import create_sprite
+from src.create.util_creator import create_sprite
 from src.ecs.components.c_animation import CAnimation
 from src.ecs.components.c_enemy_bullet_spawner import CEnemyBulletSpawner
 from src.ecs.components.c_enemy_spawner import CEnemySpawner
