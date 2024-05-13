@@ -24,7 +24,7 @@ class GameEngine:
         
         self.files_json_config()
         pygame.display.set_caption(self.window_cfg["title"])
-
+        self.font = pygame.font.Font(self.window_cfg["font"], 14)
         size_screen = self.window_cfg["size"]
         width = size_screen["w"]
         height = size_screen["h"]
@@ -33,7 +33,7 @@ class GameEngine:
             (width, height),pygame.SCALED
         )
         self._clock = pygame.time.Clock()
-        self.is_running = False
+        self.is_running = False       
         self._framerate = self.window_cfg["framerate"]
         self._delta_time = 0
 
@@ -84,14 +84,20 @@ class GameEngine:
         self._current_scene.simulate(self._delta_time,self.screen)
 
     def _draw(self):
-        screen_color = self.window_cfg["bg_color"]
-        red = screen_color["r"]
-        green = screen_color["g"]
-        blue = screen_color["b"]
-
-        self.screen.fill((red,green,blue))
-        self._current_scene.do_draw(self.screen)
-        pygame.display.flip()
+        if  not self._current_scene.is_paused:
+            screen_color = self.window_cfg["bg_color"]
+            red = screen_color["r"]
+            green = screen_color["g"]
+            blue = screen_color["b"]
+            
+            self.screen.fill((red,green,blue))                       
+            self._current_scene.do_draw(self.screen) 
+            self._current_scene.do_draw_score(self.font, self.screen, self.window_cfg , 0)            
+        else:
+            text = self.font.render("PAUSED", True, (255, 255, 255))
+            text_rect = text.get_rect(center=(self.window_cfg["size"]["w"] // 2, self.window_cfg["size"]["h"] // 2))
+            self.screen.blit(text, text_rect)           
+        pygame.display.flip()    
 
     def _handle_switch_scene(self):
         if self._scene_name_to_switch is not None:

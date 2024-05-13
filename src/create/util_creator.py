@@ -42,11 +42,13 @@ def crear_enemigo(ecs_world:esper.World,new_enemy_info:dict,pos:pygame.Vector2):
 def crear_input_player(ecs_world:esper.World):
         input_left = ecs_world.create_entity()
         input_right = ecs_world.create_entity()      
-        input_key_z = ecs_world.create_entity()       
+        input_key_z = ecs_world.create_entity() 
+        input_key_p = ecs_world.create_entity()       
 
         ecs_world.add_component(input_left, CInputCommand("PLAYER_LEFT", pygame.K_LEFT))
         ecs_world.add_component(input_right, CInputCommand("PLAYER_RIGHT", pygame.K_RIGHT)) 
         ecs_world.add_component(input_key_z, CInputCommand("PLAYER_FIRE", pygame.K_z))
+        ecs_world.add_component(input_key_p, CInputCommand("PLAYER_PAUSE", pygame.K_p))
 
 
 def create_text(ecs_world:esper.World, text:str, font:pygame.font.Font, color:pygame.Color, position:pygame.Vector2):
