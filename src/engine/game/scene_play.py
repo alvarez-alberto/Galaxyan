@@ -48,20 +48,21 @@ class ScenePlay(Scene):
         create_stars_background(self.ecs_world)
 
     def do_update(self, delta_time: float,screen:pygame.Surface):
-        system_movement(self.ecs_world,delta_time) 
-        system_screen_player(self.ecs_world,screen,self.bullets_cfg["player"]["size"])
-        system_screen_bullet(self.ecs_world,screen,self.pl_entity,self.bullets_cfg)
-        
-        system_starfield(self.ecs_world, delta_time)
-        system_blink(self.ecs_world, delta_time)
-        
-        system_enemy_spawner(self.ecs_world, self.enemies_cfg, delta_time)
-        self.invert = system_enemy_screen_bounce(self.ecs_world, self.enemies_cfg, self.invert)
-        system_enemy_movement(self.ecs_world, delta_time, self.invert)
-        system_enemy_shoot(self.ecs_world, self.bullets_cfg["enemy"], self.sp_bullet_entity, delta_time)
-        system_enemy_shoot_movement(self.ecs_world, delta_time)
-        system_animation(self.ecs_world, delta_time)
-        system_screen_limit_enemy_bullet(self.ecs_world, self.screen_rect, self.sp_bullet_entity)
+        if self.is_paused == False:
+            system_movement(self.ecs_world,delta_time) 
+            system_screen_player(self.ecs_world,screen,self.bullets_cfg["player"]["size"])
+            system_screen_bullet(self.ecs_world,screen,self.pl_entity,self.bullets_cfg)
+            
+            system_starfield(self.ecs_world, delta_time)
+            system_blink(self.ecs_world, delta_time)
+            
+            system_enemy_spawner(self.ecs_world, self.enemies_cfg, delta_time)
+            self.invert = system_enemy_screen_bounce(self.ecs_world, self.enemies_cfg, self.invert)
+            system_enemy_movement(self.ecs_world, delta_time, self.invert)
+            system_enemy_shoot(self.ecs_world, self.bullets_cfg["enemy"], self.sp_bullet_entity, delta_time)
+            system_enemy_shoot_movement(self.ecs_world, delta_time)
+            system_animation(self.ecs_world, delta_time)
+            system_screen_limit_enemy_bullet(self.ecs_world, self.screen_rect, self.sp_bullet_entity)
         
         self.ecs_world._clear_dead_entities()
     
