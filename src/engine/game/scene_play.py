@@ -36,6 +36,7 @@ class ScenePlay(Scene):
             self.bullets_cfg = json.load(bullets_file)
 
         self.invert = False
+        self.is_paused = False
         self.sp_bullet_entity = 0
 
     def do_create(self):
@@ -104,4 +105,13 @@ class ScenePlay(Scene):
                 for bullet_entity, _ in self.ecs_world.get_component(CTagBullet):
                     bullet_state = self.ecs_world.component_for_entity(bullet_entity, CBulletState)
                     bullet_state.in_cannon = False
-           
+
+        if action.name == "PLAYER_PAUSE":
+            if action.phase == CommandPhase.START:                
+                self.is_paused = not self.is_paused   
+
+    def do_draw_score(self, font ,screen, window , score:int):
+        text = font.render(f"Score: {score}", True, (255, 255, 255))
+        text_rect = text.get_rect()
+        text_rect.topright = (window["size"]["w"], 0)
+        screen.blit(text, text_rect)                   
