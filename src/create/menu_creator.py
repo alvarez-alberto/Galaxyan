@@ -43,9 +43,9 @@ def create_title(ecs_world:esper.World) -> int:
 def create_start_game_text(ecs_world: esper.World) -> int:
     interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
     menu_cfg = interface_cfg["menu"]
-    color = pygame.color.Color(menu_cfg["color"]["r"],
-                                          menu_cfg["color"]["g"],
-                                          menu_cfg["color"]["b"])
+    color = pygame.color.Color(menu_cfg["title_text_color"]["r"],
+                                          menu_cfg["title_text_color"]["g"],
+                                          menu_cfg["title_text_color"]["b"])
     pos = pygame.Vector2(60,160)
     font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
 

@@ -93,7 +93,7 @@ def create_stars_background(ecs_world: esper.World) -> None:
 def create_up_text(ecs_world:esper.World) -> int:
         interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
         menu_cfg = interface_cfg["menu"]
-        color = pygame.color.Color(menu_cfg["color"]["r"],menu_cfg["color"]["g"],menu_cfg["color"]["b"])
+        color = pygame.color.Color(menu_cfg["title_text_color"]["r"],menu_cfg["title_text_color"]["g"],menu_cfg["title_text_color"]["b"])
         pos = pygame.Vector2(30,20)
         font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
 
@@ -104,7 +104,7 @@ def create_up_text(ecs_world:esper.World) -> int:
 def create_hi_score_text(ecs_world:esper.World) -> int:
         interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
         menu_cfg = interface_cfg["menu"]
-        color = pygame.color.Color(menu_cfg["color"]["r"],menu_cfg["color"]["g"],menu_cfg["color"]["b"])
+        color = pygame.color.Color(menu_cfg["title_text_color"]["r"],menu_cfg["title_text_color"]["g"],menu_cfg["title_text_color"]["b"])
         pos = pygame.Vector2(90,20)
         font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
 
@@ -115,7 +115,7 @@ def create_hi_score_text(ecs_world:esper.World) -> int:
 def create_max_score_text(ecs_world:esper.World) -> int:
         interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
         menu_cfg = interface_cfg["menu"]
-        color = pygame.color.Color(menu_cfg["color"]["r"],menu_cfg["color"]["g"],menu_cfg["color"]["b"])
+        color = pygame.color.Color(menu_cfg["high_score_color"]["r"],menu_cfg["high_score_color"]["g"],menu_cfg["high_score_color"]["b"])
         pos = pygame.Vector2(120,30)
         font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
 
@@ -129,7 +129,7 @@ def create_max_score_text(ecs_world:esper.World) -> int:
 def create_score_value(ecs_world:esper.World) -> int:
         interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
         menu_cfg = interface_cfg["menu"]
-        color = pygame.color.Color(menu_cfg["color"]["r"],menu_cfg["color"]["g"],menu_cfg["color"]["b"])
+        color = pygame.color.Color(menu_cfg["normal_text_color"]["r"],menu_cfg["normal_text_color"]["g"],menu_cfg["normal_text_color"]["b"])
         pos = pygame.Vector2(40,30)
         font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
 
