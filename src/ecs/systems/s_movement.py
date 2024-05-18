@@ -6,7 +6,7 @@ from src.ecs.components.c_velocity import CVelocity
 from src.ecs.components.tag.c_tag_bullet import CTagBullet
 from src.ecs.components.tag.c_tag_player import CTagPlayer
 
-def system_movement(world:esper.World, delta_time:float):
+def system_movement_player(world:esper.World, delta_time:float):
     components = world.get_components(CTransform, CVelocity, CTagPlayer)
     components2 = world.get_components(CTransform, CVelocity, CTagBullet)
 

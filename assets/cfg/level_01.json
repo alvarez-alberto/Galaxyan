@@ -5,7 +5,7 @@
             "enemy_type": "enemy_01",
             "position": {
                 "x": 55,
-                "y": 100
+                "y": 85
             },
             "rows": 3,
             "columns": 10,
@@ -17,7 +17,7 @@
             "enemy_type": "enemy_02",
             "position": {
                 "x": 68,
-                "y": 85
+                "y": 70
             },
             "rows": 1,
             "columns": 8,
@@ -29,7 +29,7 @@
             "enemy_type": "enemy_03",
             "position": {
                 "x": 85,
-                "y": 70
+                "y": 55
             },
             "rows": 1,
             "columns": 6,
@@ -41,7 +41,7 @@
             "enemy_type": "enemy_04",
             "position": {
                 "x": 99,
-                "y": 55
+                "y": 40
             },
             "rows": 1,
             "columns": 2,

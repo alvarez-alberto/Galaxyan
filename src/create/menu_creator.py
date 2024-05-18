@@ -3,6 +3,7 @@ import json
 import pygame
 import esper
 from src.create.util_creator import create_sprite, create_text
+from src.ecs.components.c_blink import CBlink
 from src.ecs.components.c_velocity import CVelocity
 from src.engine.service_locator import ServiceLocator
 
@@ -36,3 +37,4 @@ def create_start_game_text(ecs_world: esper.World) -> None:
 
     press_start_entity = create_text(ecs_world, "PRESS Z TO START", font, color, pos)
     ecs_world.add_component(press_start_entity, CVelocity(pygame.Vector2(0,0)))
+    ecs_world.add_component(press_start_entity, CBlink(0.5))
