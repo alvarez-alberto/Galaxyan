@@ -1,4 +1,4 @@
-import json, pygame
+import pygame
 
 from src.ecs.systems.s_blink import system_blink
 from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
@@ -9,7 +9,7 @@ from src.ecs.systems.s_starfield import system_starfield
 from src.ecs.components.c_velocity import CVelocity
 from src.ecs.components.tag.c_tag_bullet import CTagBullet
 from src.ecs.systems.s_fire_bullet import system_fire_bullet
-from src.ecs.systems.s_movement import system_movement_player
+from src.ecs.systems.s_movement import system_movement
 from src.ecs.systems.s_screen_bullet import system_screen_bullet
 from src.ecs.systems.s_screen_player import system_screen_player
 from src.ecs.systems.s_enemy_movement import system_enemy_movement
@@ -20,7 +20,6 @@ from src.ecs.systems.s_enemy_spawner import system_enemy_spawner
 from src.ecs.systems.s_screen_limit_enemy_bullet import system_screen_limit_enemy_bullet
 from src.ecs.systems.s_animation import system_animation
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
-from src.ecs.components.c_bullet_state import CBulletState
 from src.create.util_creator import crear_input_player, create_stars_background
 from src.create.enemy_creator import create_spawn, create_spawn_enemy_bullet
 from src.create.play_creator import create_bullet, create_player
@@ -32,16 +31,11 @@ class ScenePlay(Scene):
     def __init__(self, engine:'src.engine.game_engine.GameEngine') -> None:
         super().__init__(engine)
 
-        with open("assets/cfg/level_01.json") as level_01_file:
-            self.level_01_cfg = json.load(level_01_file)
-        with open("assets/cfg/enemies.json") as enemies_file:
-            self.enemies_cfg = json.load(enemies_file)
-        with open("assets/cfg/bullets.json") as bullets_file:
-            self.bullets_cfg = json.load(bullets_file)
-        with open("assets/cfg/explosions.json") as explosions_file:
-            self.explosions_cfg = json.load(explosions_file)
-        with open("assets/cfg/player.json", encoding="utf-8") as player_config:
-            self.player_cfg = json.load(player_config)
+        self.level_01_cfg = ServiceLocator.configs_service.load_config("assets/cfg/level_01.json")
+        self.enemies_cfg = ServiceLocator.configs_service.load_config("assets/cfg/enemies.json")
+        self.bullets_cfg = ServiceLocator.configs_service.load_config("assets/cfg/bullets.json")
+        self.explosions_cfg = ServiceLocator.configs_service.load_config("assets/cfg/explosions.json")
+        self.player_cfg = ServiceLocator.configs_service.load_config("assets/cfg/player.json")
 
         self.invert = False
         self.delete_bullet_player = False
@@ -58,7 +52,7 @@ class ScenePlay(Scene):
 
     def do_update(self, delta_time: float,screen:pygame.Surface):
         if self.is_paused == False:
-            system_movement_player(self.ecs_world,delta_time) 
+            system_movement(self.ecs_world,delta_time) 
             system_screen_player(self.ecs_world,screen)
             self.delete_bullet_player = system_screen_bullet(self.ecs_world,screen,self.pl_entity,self.bullets_cfg, self.delete_bullet_player, self.pl_entity, self.bullets_cfg)
             

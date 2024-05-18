@@ -1,4 +1,4 @@
-import json
+
 import random
 import esper
 import pygame
@@ -6,13 +6,10 @@ import pygame
 
 from src.ecs.components.c_blink import CBlink
 from src.ecs.components.c_input_command import CInputCommand
-from src.ecs.components.c_player_state import CPlayerState
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
-from src.ecs.components.tag.c_tag_bullet import CTagBullet
 from src.ecs.components.tag.c_tag_enemy import CTagEnemy
-from src.ecs.components.tag.c_tag_player import CTagPlayer
 from src.ecs.components.tag.c_tag_star import CTagStar
 from src.engine.service_locator import ServiceLocator
 
@@ -57,15 +54,10 @@ def create_text(ecs_world:esper.World, text:str, font:pygame.font.Font, color:py
         ecs_world.add_component(text_entity,CSurface.from_text(text, font, color))
         return text_entity
 
-def load_config_background() -> dict:
-        with open("assets/cfg/starfield.json", encoding="utf-8") as starfield_config:
-            starfield_cfg = json.load(starfield_config)
-        
-        return starfield_cfg
 
 def create_stars_background(ecs_world: esper.World) -> None:
         
-        starfield_cfg = load_config_background()
+        starfield_cfg = ServiceLocator.configs_service.load_config("assets/cfg/starfield.json")
 
         star_colors = starfield_cfg["star_colors"]
         number_of_stars = starfield_cfg["number_of_stars"]
@@ -96,6 +88,56 @@ def create_stars_background(ecs_world: esper.World) -> None:
                 ecs_world.add_component(star_entity, CTransform(pos))
                 ecs_world.add_component(star_entity, CVelocity(vel))
                 ecs_world.add_component(star_entity, CBlink(blink_rate))
+
+
+def create_up_text(ecs_world:esper.World) -> int:
+        interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
+        menu_cfg = interface_cfg["menu"]
+        color = pygame.color.Color(menu_cfg["title_text_color"]["r"],menu_cfg["title_text_color"]["g"],menu_cfg["title_text_color"]["b"])
+        pos = pygame.Vector2(30,20)
+        font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
+
+        up_text_entity = create_text(ecs_world, "1UP", font, color, pos)
+        ecs_world.add_component(up_text_entity, CVelocity(pygame.Vector2(0,0)))
+        return up_text_entity
+
+def create_hi_score_text(ecs_world:esper.World) -> int:
+        interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
+        menu_cfg = interface_cfg["menu"]
+        color = pygame.color.Color(menu_cfg["title_text_color"]["r"],menu_cfg["title_text_color"]["g"],menu_cfg["title_text_color"]["b"])
+        pos = pygame.Vector2(90,20)
+        font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
+
+        hi_score_entity = create_text(ecs_world, "HI-SCORE", font, color, pos)
+        ecs_world.add_component(hi_score_entity, CVelocity(pygame.Vector2(0,0)))
+        return hi_score_entity  
+
+def create_max_score_text(ecs_world:esper.World) -> int:
+        interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
+        menu_cfg = interface_cfg["menu"]
+        color = pygame.color.Color(menu_cfg["high_score_color"]["r"],menu_cfg["high_score_color"]["g"],menu_cfg["high_score_color"]["b"])
+        pos = pygame.Vector2(120,30)
+        font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
+
+        #forma de cargar el max_score
+        max_score = 1000 #cambiar por un service locator
+        max_score_text = create_text(ecs_world, str(max_score), font, color, pos)
+        ecs_world.add_component(max_score_text, CVelocity(pygame.Vector2(0,0)))
+        return max_score_text  
+
+
+def create_score_value(ecs_world:esper.World) -> int:
+        interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
+        menu_cfg = interface_cfg["menu"]
+        color = pygame.color.Color(menu_cfg["normal_text_color"]["r"],menu_cfg["normal_text_color"]["g"],menu_cfg["normal_text_color"]["b"])
+        pos = pygame.Vector2(40,30)
+        font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
+
+        #forma de cargar el player_score
+        player_score = 1000 #cambiar por un service locator
+        player_score_value = create_text(ecs_world, str(player_score), font, color, pos)
+        ecs_world.add_component(player_score_value, CVelocity(pygame.Vector2(0,0)))
+        return player_score_value  
 
 
 

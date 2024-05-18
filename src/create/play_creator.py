@@ -1,4 +1,3 @@
-import json
 
 import pygame
 import esper
@@ -14,8 +13,8 @@ from src.engine.service_locator import ServiceLocator
 
 
 def create_player(ecs_world: esper.World):
-    with open("assets/cfg/player.json", encoding="utf-8") as player_config:
-            player_cfg = json.load(player_config)
+
+    player_cfg = ServiceLocator.configs_service.load_config("assets/cfg/player.json")
 
     surface = ServiceLocator.images_service.get(player_cfg["image"])
     pos = pygame.Vector2(player_cfg["pos"]["x"],  
