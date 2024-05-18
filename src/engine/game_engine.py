@@ -9,6 +9,7 @@ from src.ecs.components.c_input_command import CInputCommand
 from src.engine.game.scene_menu import SceneMenu
 from src.engine.game.scene_play import ScenePlay
 from src.engine.scenes.scene import Scene
+from src.engine.service_locator import ServiceLocator
 
 
 class GameEngine:
@@ -44,12 +45,8 @@ class GameEngine:
         self._scene_name_to_switch:str = None
 
     def files_json_config(self):
-        with open(os.path.join(self.CONFIG_PATH, self.WINDOW_CONFIG), encoding="utf-8") as window_config:
-            self.window_cfg = json.load(window_config)
-            
-        with open(os.path.join(self.CONFIG_PATH, self.PLAYER_CONFIG), encoding="utf-8") as player_config:
-            self.player_cfg = json.load(player_config)
-
+        self.window_cfg = ServiceLocator.configs_service.load_config("assets/cfg/window.json")
+        self.player_cfg = ServiceLocator.configs_service.load_config("assets/cfg/player.json")
 
     async def run(self, start_scene_name:str) -> None:
         self.is_running = True
