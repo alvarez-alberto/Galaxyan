@@ -5,7 +5,7 @@ from src.ecs.systems.s_starfield import system_starfield
 from src.ecs.components.c_velocity import CVelocity
 from src.ecs.components.tag.c_tag_bullet import CTagBullet
 from src.ecs.systems.s_fire_bullet import system_fire_bullet
-from src.ecs.systems.s_movement import system_movement_player
+from src.ecs.systems.s_movement import system_movement
 from src.ecs.systems.s_screen_bullet import system_screen_bullet
 from src.ecs.systems.s_screen_player import system_screen_player
 from src.ecs.systems.s_enemy_movement import system_enemy_movement
@@ -49,7 +49,7 @@ class ScenePlay(Scene):
 
     def do_update(self, delta_time: float,screen:pygame.Surface):
         if self.is_paused == False:
-            system_movement_player(self.ecs_world,delta_time) 
+            system_movement(self.ecs_world,delta_time) 
             system_screen_player(self.ecs_world,screen)
             system_screen_bullet(self.ecs_world,screen,self.pl_entity,self.bullets_cfg)
             

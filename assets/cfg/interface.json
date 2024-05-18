@@ -28,5 +28,9 @@
             "y": 60
         }
     },
-    "high_score_max_value": 1000
+    "high_score_max_value": 1000,
+    "card": {
+        "vel": -50,
+        "outside": 240
+    }
 }
