@@ -1,6 +1,10 @@
 import json, pygame
 
 from src.ecs.systems.s_blink import system_blink
+from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
+from src.ecs.systems.s_collision_bulletenemy_player import system_collision_bulletenemy_player
+from src.ecs.systems.s_explosion_state import system_explosion_state
+from src.ecs.systems.s_player_spawn import system_player_spawn
 from src.ecs.systems.s_starfield import system_starfield
 from src.ecs.components.c_velocity import CVelocity
 from src.ecs.components.tag.c_tag_bullet import CTagBullet
@@ -34,8 +38,13 @@ class ScenePlay(Scene):
             self.enemies_cfg = json.load(enemies_file)
         with open("assets/cfg/bullets.json") as bullets_file:
             self.bullets_cfg = json.load(bullets_file)
+        with open("assets/cfg/explosions.json") as explosions_file:
+            self.explosions_cfg = json.load(explosions_file)
+        with open("assets/cfg/player.json", encoding="utf-8") as player_config:
+            self.player_cfg = json.load(player_config)
 
         self.invert = False
+        self.delete_bullet_player = False
         self.is_paused = False
         self.sp_bullet_entity = 0
 
@@ -51,7 +60,7 @@ class ScenePlay(Scene):
         if self.is_paused == False:
             system_movement_player(self.ecs_world,delta_time) 
             system_screen_player(self.ecs_world,screen)
-            system_screen_bullet(self.ecs_world,screen,self.pl_entity,self.bullets_cfg)
+            self.delete_bullet_player = system_screen_bullet(self.ecs_world,screen,self.pl_entity,self.bullets_cfg, self.delete_bullet_player, self.pl_entity, self.bullets_cfg)
             
             system_starfield(self.ecs_world, delta_time)
             system_blink(self.ecs_world, delta_time)
@@ -59,10 +68,14 @@ class ScenePlay(Scene):
             system_enemy_spawner(self.ecs_world, self.enemies_cfg, delta_time)
             self.invert = system_enemy_screen_bounce(self.ecs_world, self.enemies_cfg, self.invert)
             system_enemy_movement(self.ecs_world, delta_time, self.invert)
-            system_enemy_shoot(self.ecs_world, self.bullets_cfg["enemy"], self.sp_bullet_entity, delta_time)
+            system_enemy_shoot(self.ecs_world, self.bullets_cfg["enemy"], self.sp_bullet_entity, self.pl_entity, delta_time)
             system_enemy_shoot_movement(self.ecs_world, delta_time)
+            self.delete_bullet_player = system_collision_bullet_enemy(self.ecs_world, self.explosions_cfg["enemy"], self.delete_bullet_player)
+            system_collision_bulletenemy_player(self.ecs_world, self.pl_entity, self.explosions_cfg["player"], -100, -100)
+            system_explosion_state(self.ecs_world)
             system_animation(self.ecs_world, delta_time)
             system_screen_limit_enemy_bullet(self.ecs_world, self.screen_rect, self.sp_bullet_entity)
+            system_player_spawn(self.ecs_world, self.player_cfg["pos"]["x"], self.player_cfg["pos"]["y"], delta_time)
         
         self.ecs_world._clear_dead_entities()
     
