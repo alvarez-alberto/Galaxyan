@@ -7,13 +7,24 @@ from src.ecs.systems.s_card_slice import system_card_slice
 from src.ecs.systems.s_movement import system_movement
 from src.ecs.systems.s_starfield import system_starfield
 from src.engine.scenes.scene import Scene
-from src.create.util_creator import create_stars_background
+from src.create.util_creator import create_hi_score_text, create_max_score_text, create_score_value, create_stars_background, create_up_text
 
 class SceneMenu(Scene):
     def do_create(self): 
-        create_title(self.ecs_world)
+        title = create_title(self.ecs_world)
         start_text = create_start_game_text(self.ecs_world)
+        up_text = create_up_text(self.ecs_world)
+        hi_score_text = create_hi_score_text(self.ecs_world)
+        max_score_text = create_max_score_text(self.ecs_world)
+        score_value = create_score_value(self.ecs_world)
+
+        create_card_slice(self.ecs_world, title)
         create_card_slice(self.ecs_world, start_text)
+        create_card_slice(self.ecs_world, up_text)
+        create_card_slice(self.ecs_world, hi_score_text)
+        create_card_slice(self.ecs_world, max_score_text)
+        create_card_slice(self.ecs_world, score_value)
+
         create_stars_background(self.ecs_world)
 
         start_game_action = self.ecs_world.create_entity()
