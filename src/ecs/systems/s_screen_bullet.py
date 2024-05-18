@@ -12,7 +12,7 @@ from src.ecs.components.tag.c_tag_bullet import CTagBullet
 
 
 
-def system_screen_bullet(world:esper.World, screen:pygame.Surface,player_entity:int,bullet_cfg:dict):
+def system_screen_bullet(world:esper.World, screen:pygame.Surface,player_entity:int,bullet_cfg:dict, delete_bullet:bool, pl_entity:int, bullets_cfg:dict) -> bool:
     components = world.get_components(CTransform, CSurface, CVelocity,CBulletState,CTagBullet)
 
     screen_rect = screen.get_rect()
@@ -21,6 +21,11 @@ def system_screen_bullet(world:esper.World, screen:pygame.Surface,player_entity:
     c_v:CVelocity
     c_bs:CBulletState
     c_tag:CTagBullet
+
+    if delete_bullet:
+        create_bullet(world, pl_entity, bullets_cfg)
+        delete_bullet = False
+
     for bullet_entity, (c_t, c_s, c_v,c_bs,c_tag) in components:
         
         bullet_rect = CSurface.get_area_relative(c_s.area, c_t.pos)
@@ -49,6 +54,8 @@ def system_screen_bullet(world:esper.World, screen:pygame.Surface,player_entity:
             c_t.pos = pos
             c_v.vel = pygame.Vector2(0,0)
             c_bs.in_cannon = True
+
+    return delete_bullet
             
 
 
