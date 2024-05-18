@@ -24,7 +24,7 @@ def create_player(ecs_world: esper.World):
     player_input_velocity = player_cfg["input_velocity"]
     player_entity = create_sprite(ecs_world, pos, vel, surface)
     ecs_world.add_component(player_entity, CTagPlayer())
-    ecs_world.add_component(player_entity, CPlayerState())
+    ecs_world.add_component(player_entity, CPlayerState(player_cfg["time_spawn"]))
     player_tr = ecs_world.component_for_entity(player_entity, CTransform)
     player_v = ecs_world.component_for_entity(player_entity, CVelocity)
     player_tag = ecs_world.component_for_entity(player_entity, CTagPlayer)
