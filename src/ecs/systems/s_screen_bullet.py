@@ -37,7 +37,7 @@ def system_screen_bullet(world:esper.World, screen:pygame.Surface,player_entity:
             c_t.pos.x = bullet_rect.x
             c_t.pos.y = bullet_rect.y
             
-        if outside_top:
+        if outside_top or c_bs.in_cannon:
             player_pos = world.component_for_entity(player_entity, CTransform)
             player_surface = world.component_for_entity(player_entity, CSurface)
             player_size = player_surface.area.size

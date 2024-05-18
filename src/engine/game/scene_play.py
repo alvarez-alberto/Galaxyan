@@ -40,17 +40,17 @@ class ScenePlay(Scene):
         self.sp_bullet_entity = 0
 
     def do_create(self):
+        create_stars_background(self.ecs_world)
         create_spawn(self.ecs_world, self.level_01_cfg["enemy_spawn_events"])
         self.sp_bullet_entity = create_spawn_enemy_bullet(self.ecs_world, self.bullets_cfg["enemy"])
         self.pl_entity, self.pl_tr, self.pl_v, self.pl_tg, self.pl_st, self.pl_input_v = create_player(self.ecs_world)
         create_bullet(self.ecs_world,self.pl_entity,self.bullets_cfg)
         crear_input_player(self.ecs_world)
-        create_stars_background(self.ecs_world)
 
     def do_update(self, delta_time: float,screen:pygame.Surface):
         if self.is_paused == False:
             system_movement(self.ecs_world,delta_time) 
-            system_screen_player(self.ecs_world,screen,self.bullets_cfg["player"]["size"])
+            system_screen_player(self.ecs_world,screen)
             system_screen_bullet(self.ecs_world,screen,self.pl_entity,self.bullets_cfg)
             
             system_starfield(self.ecs_world, delta_time)
@@ -70,42 +70,23 @@ class ScenePlay(Scene):
         if action.name == "PLAYER_LEFT":
             if action.phase == CommandPhase.START:
                 self.pl_v.vel.x -= self.pl_input_v
-                for bullet_entity, _ in self.ecs_world.get_component(CTagBullet):
-                    bullet_state = self.ecs_world.component_for_entity(bullet_entity, CBulletState)
-                    if bullet_state.in_cannon:
-                        bullet_vel = self.ecs_world.component_for_entity(bullet_entity, CVelocity)
-                        bullet_vel.vel.x -= self.pl_input_v
+                
             elif action.phase == CommandPhase.END:
                 self.pl_v.vel.x += self.pl_input_v
-                for bullet_entity, _ in self.ecs_world.get_component(CTagBullet):
-                    bullet_state = self.ecs_world.component_for_entity(bullet_entity, CBulletState)
-                    if bullet_state.in_cannon:
-                        bullet_vel = self.ecs_world.component_for_entity(bullet_entity, CVelocity)
-                        bullet_vel.vel.x += self.pl_input_v
-
+                
         if action.name == "PLAYER_RIGHT":
             if action.phase == CommandPhase.START:
                 self.pl_v.vel.x += self.pl_input_v
-                for bullet_entity, _ in self.ecs_world.get_component(CTagBullet):
-                    bullet_state = self.ecs_world.component_for_entity(bullet_entity, CBulletState)
-                    if bullet_state.in_cannon:
-                        bullet_vel = self.ecs_world.component_for_entity(bullet_entity, CVelocity)
-                        bullet_vel.vel.x += self.pl_input_v
+                
             elif action.phase == CommandPhase.END:
                 self.pl_v.vel.x -= self.pl_input_v
-                for bullet_entity, _ in self.ecs_world.get_component(CTagBullet):
-                    bullet_state = self.ecs_world.component_for_entity(bullet_entity, CBulletState)
-                    if bullet_state.in_cannon:
-                        bullet_vel = self.ecs_world.component_for_entity(bullet_entity, CVelocity)
-                        bullet_vel.vel.x -= self.pl_input_v
+                
 
         if action.name == "PLAYER_FIRE":
             if action.phase == CommandPhase.START: 
                 ServiceLocator.sounds_service.play(self.bullets_cfg["player"]["sound"])        
                 system_fire_bullet(self.ecs_world,self.bullets_cfg["player"]["velocity"])
-                for bullet_entity, _ in self.ecs_world.get_component(CTagBullet):
-                    bullet_state = self.ecs_world.component_for_entity(bullet_entity, CBulletState)
-                    bullet_state.in_cannon = False
+              
 
         if action.name == "PLAYER_PAUSE":
             if action.phase == CommandPhase.START:                
