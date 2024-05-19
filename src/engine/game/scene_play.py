@@ -58,6 +58,9 @@ class ScenePlay(Scene):
         self.pause_surface = self.ecs_world.component_for_entity(component_type=CSurface, entity=self.pause_text)
         self.pause_blink = self.ecs_world.component_for_entity(component_type=CBlink,entity=self.pause_text)
 
+        ServiceLocator.sounds_service.play(self.level_01_cfg["game_start_sound"])
+
+
         level_entity = self.ecs_world.create_entity()
         self.c_level_state = CLevelState(self.game_start_text)
         self.ecs_world.add_component(level_entity, self.c_level_state)
@@ -65,8 +68,7 @@ class ScenePlay(Scene):
     def do_update(self, delta_time: float,screen:pygame.Surface):
 
         system_level_state(self.ecs_world, self.c_level_state,self.level_01_cfg, delta_time)
-        if self.c_level_state.state != LevelState.PAUSED:
-
+        if self.c_level_state.state == LevelState.PLAY:
             system_movement(self.ecs_world,delta_time) 
             system_screen_player(self.ecs_world,screen)
             self.delete_bullet_player = system_screen_bullet(self.ecs_world,screen,self.pl_entity,self.bullets_cfg, self.delete_bullet_player, self.pl_entity, self.bullets_cfg)
@@ -114,6 +116,7 @@ class ScenePlay(Scene):
                     self.c_level_state.state = LevelState.PAUSED
                     self.pause_surface.visible = True
                     self.pause_blink.active = True
+                    ServiceLocator.sounds_service.play(self.level_01_cfg["game_pause_sound"])
                 elif self.c_level_state.state == LevelState.PAUSED:
                     self.c_level_state.state = LevelState.PLAY
                     self.pause_surface.visible = False
