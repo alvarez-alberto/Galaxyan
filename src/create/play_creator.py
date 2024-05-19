@@ -1,7 +1,8 @@
 
 import pygame
 import esper
-from src.create.util_creator import create_sprite
+from src.create.util_creator import create_sprite, create_text
+from src.ecs.components.c_blink import CBlink
 from src.ecs.components.c_bullet_state import CBulletState
 from src.ecs.components.c_player_state import CPlayerState
 from src.ecs.components.c_surface import CSurface
@@ -52,4 +53,33 @@ def create_bullet(ecs_world: esper.World,  player_entity: int, bullet_cfg: dict)
     ecs_world.add_component(bullet_entity, CTagBullet()) 
     ecs_world.add_component(bullet_entity,CBulletState(in_cannon=True))
     bullet_v = ecs_world.component_for_entity(bullet_entity, CVelocity)
-    
+
+
+def create_game_start_text(ecs_world:esper.World) -> int:
+    interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
+    menu_cfg = interface_cfg["menu"]
+    color = pygame.color.Color(menu_cfg["normal_text_color"]["r"],menu_cfg["normal_text_color"]["g"],menu_cfg["normal_text_color"]["b"])
+    pos = pygame.Vector2(90, 160)
+    font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
+
+    game_start_entity = create_text(ecs_world, "GAME START", font, color, pos)
+    return game_start_entity    
+
+def create_paused_text(ecs_world:esper.World) -> int:
+    interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
+    menu_cfg = interface_cfg["menu"]
+    color = pygame.color.Color(menu_cfg["title_text_color"]["r"],menu_cfg["title_text_color"]["g"],menu_cfg["title_text_color"]["b"])
+    pos = pygame.Vector2(110, 160)
+    font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
+
+    pause_text_entity = create_text(ecs_world, "PAUSE", font, color, pos)
+    pause_surface = ecs_world.component_for_entity(component_type=CSurface, entity=pause_text_entity)
+    pause_surface.visible = False
+
+    pause_blink = CBlink(0.5)
+
+    ecs_world.add_component(pause_text_entity,pause_blink)
+    pause_blink.active = False
+
+
+    return pause_text_entity
