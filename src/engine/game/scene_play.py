@@ -1,9 +1,13 @@
 import pygame
 
+from src.ecs.components.c_blink import CBlink
+from src.ecs.components.c_level_state import CLevelState, LevelState
+from src.ecs.components.c_surface import CSurface
 from src.ecs.systems.s_blink import system_blink
 from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
 from src.ecs.systems.s_collision_bulletenemy_player import system_collision_bulletenemy_player
 from src.ecs.systems.s_explosion_state import system_explosion_state
+from src.ecs.systems.s_level_state import system_level_state
 from src.ecs.systems.s_player_spawn import system_player_spawn
 from src.ecs.systems.s_starfield import system_starfield
 from src.ecs.components.c_velocity import CVelocity
@@ -22,7 +26,7 @@ from src.ecs.systems.s_animation import system_animation
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
 from src.create.util_creator import crear_input_player, create_stars_background
 from src.create.enemy_creator import create_spawn, create_spawn_enemy_bullet
-from src.create.play_creator import create_bullet, create_player
+from src.create.play_creator import create_bullet, create_game_start_text, create_paused_text, create_player
 from src.engine.scenes.scene import Scene
 from src.engine.service_locator import ServiceLocator
 
@@ -39,26 +43,35 @@ class ScenePlay(Scene):
 
         self.invert = False
         self.delete_bullet_player = False
-        self.is_paused = False
         self.sp_bullet_entity = 0
 
     def do_create(self):
+
         create_stars_background(self.ecs_world)
-        create_spawn(self.ecs_world, self.level_01_cfg["enemy_spawn_events"])
         self.sp_bullet_entity = create_spawn_enemy_bullet(self.ecs_world, self.bullets_cfg["enemy"])
         self.pl_entity, self.pl_tr, self.pl_v, self.pl_tg, self.pl_st, self.pl_input_v = create_player(self.ecs_world)
         create_bullet(self.ecs_world,self.pl_entity,self.bullets_cfg)
         crear_input_player(self.ecs_world)
+        self.game_start_text = create_game_start_text(self.ecs_world)
+        self.pause_text = create_paused_text(self.ecs_world)
+
+        self.pause_surface = self.ecs_world.component_for_entity(component_type=CSurface, entity=self.pause_text)
+        self.pause_blink = self.ecs_world.component_for_entity(component_type=CBlink,entity=self.pause_text)
+
+        ServiceLocator.sounds_service.play(self.level_01_cfg["game_start_sound"])
+
+
+        level_entity = self.ecs_world.create_entity()
+        self.c_level_state = CLevelState(self.game_start_text)
+        self.ecs_world.add_component(level_entity, self.c_level_state)
 
     def do_update(self, delta_time: float,screen:pygame.Surface):
-        if self.is_paused == False:
+
+        system_level_state(self.ecs_world, self.c_level_state,self.level_01_cfg, delta_time)
+        if self.c_level_state.state == LevelState.PLAY:
             system_movement(self.ecs_world,delta_time) 
             system_screen_player(self.ecs_world,screen)
             self.delete_bullet_player = system_screen_bullet(self.ecs_world,screen,self.pl_entity,self.bullets_cfg, self.delete_bullet_player, self.pl_entity, self.bullets_cfg)
-            
-            system_starfield(self.ecs_world, delta_time)
-            system_blink(self.ecs_world, delta_time)
-            
             system_enemy_spawner(self.ecs_world, self.enemies_cfg, delta_time)
             self.invert = system_enemy_screen_bounce(self.ecs_world, self.enemies_cfg, self.invert)
             system_enemy_movement(self.ecs_world, delta_time, self.invert)
@@ -71,6 +84,8 @@ class ScenePlay(Scene):
             system_screen_limit_enemy_bullet(self.ecs_world, self.screen_rect, self.sp_bullet_entity)
             system_player_spawn(self.ecs_world, self.player_cfg["pos"]["x"], self.player_cfg["pos"]["y"], delta_time)
         
+        system_starfield(self.ecs_world, delta_time)
+        system_blink(self.ecs_world, delta_time)
         self.ecs_world._clear_dead_entities()
     
     def do_action(self, action: CInputCommand) -> None:   
@@ -97,5 +112,14 @@ class ScenePlay(Scene):
 
         if action.name == "PLAYER_PAUSE":
             if action.phase == CommandPhase.START:                
-                self.is_paused = not self.is_paused   
+                if self.c_level_state.state == LevelState.PLAY:
+                    self.c_level_state.state = LevelState.PAUSED
+                    self.pause_surface.visible = True
+                    self.pause_blink.active = True
+                    ServiceLocator.sounds_service.play(self.level_01_cfg["game_pause_sound"])
+                elif self.c_level_state.state == LevelState.PAUSED:
+                    self.c_level_state.state = LevelState.PLAY
+                    self.pause_surface.visible = False
+                    self.pause_blink.active = False
+
              

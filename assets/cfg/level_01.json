@@ -1,4 +1,6 @@
 {
+    "game_start_sound": "assets/snd/game_start.ogg",
+    "game_pause_sound": "assets/snd/game_paused.ogg",
     "enemy_spawn_events": [
         {
             "time": 0.0,
