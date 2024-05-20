@@ -3,9 +3,10 @@ import random
 import esper
 import pygame
 
-
 from src.ecs.components.c_blink import CBlink
 from src.ecs.components.c_input_command import CInputCommand
+from src.ecs.components.c_score_high_text import CHighScoreText
+from src.ecs.components.c_score_text import CScoreText
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
@@ -109,7 +110,7 @@ def create_hi_score_text(ecs_world:esper.World) -> int:
         font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
 
         hi_score_entity = create_text(ecs_world, "HI-SCORE", font, color, pos)
-        ecs_world.add_component(hi_score_entity, CVelocity(pygame.Vector2(0,0)))
+        ecs_world.add_component(hi_score_entity, CVelocity(pygame.Vector2(0,0)))  
         return hi_score_entity  
 
 def create_max_score_text(ecs_world:esper.World) -> int:
@@ -120,9 +121,11 @@ def create_max_score_text(ecs_world:esper.World) -> int:
         font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
 
         #forma de cargar el max_score
-        max_score = 1000 #cambiar por un service locator
+        max_score = ServiceLocator.score_service.get_high_score_player()
         max_score_text = create_text(ecs_world, str(max_score), font, color, pos)
         ecs_world.add_component(max_score_text, CVelocity(pygame.Vector2(0,0)))
+        ecs_world.add_component(max_score_text, CVelocity(pygame.Vector2(0,0)))
+        ecs_world.add_component(max_score_text, CHighScoreText(max_score))
         return max_score_text  
 
 
@@ -132,16 +135,22 @@ def create_score_value(ecs_world:esper.World) -> int:
         color = pygame.color.Color(menu_cfg["normal_text_color"]["r"],menu_cfg["normal_text_color"]["g"],menu_cfg["normal_text_color"]["b"])
         pos = pygame.Vector2(40,30)
         font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
-
-        #forma de cargar el player_score
-        player_score = 1000 #cambiar por un service locator
+        
+        player_score = ServiceLocator.score_service.get_current_score_player()
         player_score_value = create_text(ecs_world, str(player_score), font, color, pos)
         ecs_world.add_component(player_score_value, CVelocity(pygame.Vector2(0,0)))
-        return player_score_value  
+        ecs_world.add_component(player_score_value, CScoreText(player_score))
+        return player_score_value 
 
-
-
-
-
-
-
+def create_gameover_value(ecs_world:esper.World) -> int:
+        interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
+        menu_cfg = interface_cfg["menu"]
+        color = pygame.color.Color(menu_cfg["normal_text_color"]["r"],menu_cfg["normal_text_color"]["g"],menu_cfg["normal_text_color"]["b"])
+        pos = pygame.Vector2(40,30)
+        font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
+        
+        player_score = ServiceLocator.score_service.get_current_score_player()
+        player_score_value = create_text(ecs_world, str(player_score), font, color, pos)
+        ecs_world.add_component(player_score_value, CVelocity(pygame.Vector2(0,0)))
+        ecs_world.add_component(player_score_value, CScoreText(player_score))
+        return player_score_value 

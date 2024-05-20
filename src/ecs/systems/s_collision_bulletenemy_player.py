@@ -22,5 +22,7 @@ def system_collision_bulletenemy_player(world: esper.World, player_entity: int, 
             world.delete_entity(bullet_enemy_entity)
             create_explosion(world, pygame.Vector2(pl_rect.x, pl_rect.y), explosion_cfg)
             pl_t.pos = pygame.Vector2(sizew, sizeh)
-            pl_ast.is_dead = True
+            pl_ast.is_dead = True            
+            if(pl_ast.lives > 0):
+                pl_ast.lives -= 1
             

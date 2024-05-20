@@ -5,7 +5,7 @@ from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
 from src.ecs.components.tag.c_tag_player import CTagPlayer
 
-def system_player_spawn(world:esper.World, posx:int, posy:int, delta_time:float):
+def system_player_spawn(world:esper.World, posx:int, posy:int, delta_time:float):    
     components = world.get_components(CTransform, CVelocity, CTagPlayer, CPlayerState)
 
     c_t:CTransform

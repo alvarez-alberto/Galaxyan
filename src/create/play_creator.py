@@ -83,3 +83,22 @@ def create_paused_text(ecs_world:esper.World) -> int:
 
 
     return pause_text_entity
+
+def create_game_over_text(ecs_world:esper.World) -> int:
+    interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
+    menu_cfg = interface_cfg["menu"]
+    color = pygame.color.Color(menu_cfg["title_text_color"]["r"],menu_cfg["title_text_color"]["g"],menu_cfg["title_text_color"]["b"])
+    pos = pygame.Vector2(110, 160)
+    font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
+
+    game_over_text_entity = create_text(ecs_world, "GAME OVER", font, color, pos)
+    pause_surface = ecs_world.component_for_entity(component_type=CSurface, entity=game_over_text_entity)
+    pause_surface.visible = True
+
+    game_over_blink = CBlink(0.5)
+
+    ecs_world.add_component(game_over_text_entity,game_over_blink)
+    game_over_blink.active = True
+
+    return game_over_text_entity
+
