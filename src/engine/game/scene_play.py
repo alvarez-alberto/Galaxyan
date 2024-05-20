@@ -24,7 +24,7 @@ from src.ecs.systems.s_enemy_spawner import system_enemy_spawner
 from src.ecs.systems.s_screen_limit_enemy_bullet import system_screen_limit_enemy_bullet
 from src.ecs.systems.s_animation import system_animation
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
-from src.create.util_creator import crear_input_player, create_stars_background
+from src.create.util_creator import crear_input_player, create_hi_score_text, create_max_score_text, create_score_value, create_stars_background, create_up_text
 from src.create.enemy_creator import create_spawn, create_spawn_enemy_bullet
 from src.create.play_creator import create_bullet, create_game_start_text, create_paused_text, create_player
 from src.engine.scenes.scene import Scene
@@ -46,7 +46,11 @@ class ScenePlay(Scene):
         self.sp_bullet_entity = 0
 
     def do_create(self):
-
+        
+        create_up_text(self.ecs_world)
+        create_hi_score_text(self.ecs_world)
+        create_max_score_text(self.ecs_world)
+        create_score_value(self.ecs_world)
         create_stars_background(self.ecs_world)
         self.sp_bullet_entity = create_spawn_enemy_bullet(self.ecs_world, self.bullets_cfg["enemy"])
         self.pl_entity, self.pl_tr, self.pl_v, self.pl_tg, self.pl_st, self.pl_input_v = create_player(self.ecs_world)
@@ -60,14 +64,13 @@ class ScenePlay(Scene):
 
         ServiceLocator.sounds_service.play(self.level_01_cfg["game_start_sound"])
 
-
         level_entity = self.ecs_world.create_entity()
         self.c_level_state = CLevelState(self.game_start_text)
         self.ecs_world.add_component(level_entity, self.c_level_state)
 
     def do_update(self, delta_time: float,screen:pygame.Surface):
 
-        system_level_state(self.ecs_world, self.c_level_state,self.level_01_cfg, delta_time)
+        system_level_state(self.ecs_world, self.c_level_state,self.level_01_cfg, delta_time, self.pl_entity)
         if self.c_level_state.state == LevelState.PLAY:
             system_movement(self.ecs_world,delta_time) 
             system_screen_player(self.ecs_world,screen)
@@ -116,7 +119,7 @@ class ScenePlay(Scene):
                     self.c_level_state.state = LevelState.PAUSED
                     self.pause_surface.visible = True
                     self.pause_blink.active = True
-                    ServiceLocator.sounds_service.play(self.level_01_cfg["game_pause_sound"])
+                    ServiceLocator.sounds_service.play(self.level_01_cfg["game_pause_sound"])                    
                 elif self.c_level_state.state == LevelState.PAUSED:
                     self.c_level_state.state = LevelState.PLAY
                     self.pause_surface.visible = False

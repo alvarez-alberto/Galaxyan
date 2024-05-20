@@ -81,19 +81,16 @@ class GameEngine:
         self._current_scene.simulate(self._delta_time,self.screen)
 
     def _draw(self):
-        if  not self._current_scene.is_paused:
-            screen_color = self.window_cfg["bg_color"]
-            red = screen_color["r"]
-            green = screen_color["g"]
-            blue = screen_color["b"]
-            
-            self.screen.fill((red,green,blue))                       
-            self._current_scene.do_draw(self.screen) 
-            self._current_scene.do_draw_score(self.font, self.screen, self.window_cfg , 0)            
-        else:
-            text = self.font.render("PAUSED", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(self.window_cfg["size"]["w"] // 2, self.window_cfg["size"]["h"] // 2))
-            self.screen.blit(text, text_rect)           
+               
+        screen_color = self.window_cfg["bg_color"]
+        red = screen_color["r"]
+        green = screen_color["g"]
+        blue = screen_color["b"]
+        
+        self.screen.fill((red,green,blue))                       
+        self._current_scene.do_draw(self.screen) 
+        self._current_scene.do_draw_score(self.font, self.screen, self.window_cfg , 0)            
+      
         pygame.display.flip()    
 
     def _handle_switch_scene(self):
