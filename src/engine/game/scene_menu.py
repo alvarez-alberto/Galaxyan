@@ -29,14 +29,18 @@ class SceneMenu(Scene):
 
         start_game_action = self.ecs_world.create_entity()
         self.ecs_world.add_component(start_game_action, CInputCommand("START", pygame.K_z))
+        self.skip_intro = False
 
     def do_action(self, action: CInputCommand) -> None:
         if action.name == "START" and action.phase == CommandPhase.START:
-            self.switch_scene("PLAY_SCENE")
+            if self.skip_intro == True:
+                self.switch_scene("PLAY_SCENE")
+            else:
+                self.skip_intro = True
 
     def do_update(self, delta_time: float,screen:pygame.Surface):
 
         system_starfield(self.ecs_world, delta_time)
         system_blink(self.ecs_world, delta_time)
-        system_card_slice(self.ecs_world)
+        self.skip_intro = system_card_slice(self.ecs_world, self.skip_intro)
         system_movement(self.ecs_world, delta_time)
