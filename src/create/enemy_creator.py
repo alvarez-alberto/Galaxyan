@@ -17,7 +17,7 @@ def create_enemy(ecs_world: esper.World, position: pygame.Vector2, enemy_info:di
     velocityy = 0
     velocity = pygame.Vector2(velocityx, velocityy)
     enemy_entity = create_sprite(ecs_world, position, velocity, enemy_surface)
-    ecs_world.add_component(enemy_entity, CTagEnemy())
+    ecs_world.add_component(enemy_entity, CTagEnemy(enemy_info["score"]))
     ecs_world.add_component(enemy_entity, CAnimation(enemy_info["animations"]))
 
 def create_spawn(ecs_world: esper.World, events_data:dict):

@@ -5,6 +5,7 @@ import pygame
 
 from src.ecs.components.c_blink import CBlink
 from src.ecs.components.c_input_command import CInputCommand
+from src.ecs.components.c_level_text import CLevelText
 from src.ecs.components.c_score_high_text import CHighScoreText
 from src.ecs.components.c_score_text import CScoreText
 from src.ecs.components.c_surface import CSurface
@@ -154,3 +155,22 @@ def create_gameover_value(ecs_world:esper.World) -> int:
         ecs_world.add_component(player_score_value, CVelocity(pygame.Vector2(0,0)))
         ecs_world.add_component(player_score_value, CScoreText(player_score))
         return player_score_value 
+
+def create_level_flag(ecs_world:esper.World, level_info:dict):
+        flag_surface = ServiceLocator.images_service.get(level_info["image"])
+        position = pygame.Vector2(level_info["position"]["x"], level_info["position"]["y"])
+        velocity = pygame.Vector2(0,0)
+        
+        flag_entity = create_sprite(ecs_world, position, velocity, flag_surface)
+
+def create_level_count(ecs_world:esper.World, level_count:int) -> int:
+        interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
+        menu_cfg = interface_cfg["menu"]
+        color = pygame.color.Color(menu_cfg["normal_text_color"]["r"],menu_cfg["normal_text_color"]["g"],menu_cfg["normal_text_color"]["b"])
+        pos = pygame.Vector2(205,30)
+        font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
+        
+        level_count_value = create_text(ecs_world, str(level_count).zfill(2), font, color, pos)
+        ecs_world.add_component(level_count_value, CVelocity(pygame.Vector2(0,0)))
+        ecs_world.add_component(level_count_value, CLevelText(level_count, font, color, pos))
+        return level_count_value

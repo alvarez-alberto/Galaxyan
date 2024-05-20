@@ -87,18 +87,33 @@ def create_paused_text(ecs_world:esper.World) -> int:
 def create_game_over_text(ecs_world:esper.World) -> int:
     interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
     menu_cfg = interface_cfg["menu"]
-    color = pygame.color.Color(menu_cfg["title_text_color"]["r"],menu_cfg["title_text_color"]["g"],menu_cfg["title_text_color"]["b"])
-    pos = pygame.Vector2(110, 160)
+    color = pygame.color.Color(menu_cfg["normal_text_color"]["r"],menu_cfg["normal_text_color"]["g"],menu_cfg["normal_text_color"]["b"])
+    pos = pygame.Vector2(90, 160)
     font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
 
     game_over_text_entity = create_text(ecs_world, "GAME OVER", font, color, pos)
-    pause_surface = ecs_world.component_for_entity(component_type=CSurface, entity=game_over_text_entity)
-    pause_surface.visible = True
-
-    game_over_blink = CBlink(0.5)
-
-    ecs_world.add_component(game_over_text_entity,game_over_blink)
-    game_over_blink.active = True
-
     return game_over_text_entity
 
+def create_level_complete_text(ecs_world:esper.World) -> int:
+    interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
+    menu_cfg = interface_cfg["menu"]
+    color = pygame.color.Color(menu_cfg["normal_text_color"]["r"],menu_cfg["normal_text_color"]["g"],menu_cfg["normal_text_color"]["b"])
+    pos = pygame.Vector2(75, 160)
+    font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
+
+    level_complete_text_entity = create_text(ecs_world, "LEVEL COMPLETE", font, color, pos)
+    level_complete_surface = ecs_world.component_for_entity(component_type=CSurface, entity=level_complete_text_entity)
+    level_complete_surface.visible = False
+    return level_complete_text_entity
+
+def create_get_ready_text(ecs_world:esper.World) -> int:
+    interface_cfg = ServiceLocator.configs_service.load_config("assets/cfg/interface.json")
+    menu_cfg = interface_cfg["menu"]
+    color = pygame.color.Color(menu_cfg["title_text_color"]["r"],menu_cfg["title_text_color"]["g"],menu_cfg["title_text_color"]["b"])
+    pos = pygame.Vector2(20, 180)
+    font = ServiceLocator.fonts_service.get(menu_cfg["font"],menu_cfg["size"])
+
+    get_ready_text_entity = create_text(ecs_world, "GET READY FOR THE NEXT LEVEL", font, color, pos)
+    get_ready_surface = ecs_world.component_for_entity(component_type=CSurface, entity=get_ready_text_entity)
+    get_ready_surface.visible = False
+    return get_ready_text_entity

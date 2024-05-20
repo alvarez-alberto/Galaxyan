@@ -31,7 +31,7 @@ def system_collision_bullet_enemy(world: esper.World, explosion_cfg:dict, delete
                 
                 for txt_entity, (c_cs_txt) in components_score_text:                                   
                     world.delete_entity(txt_entity)                    
-                    new_high_score = ServiceLocator.score_service.update_score_player(30)
+                    new_high_score = ServiceLocator.score_service.update_score_player(c_tge.score)
                     create_score_value(world)
                     if new_high_score:
                         for txt_entity, (c_hs_txt) in components_text_high_score:

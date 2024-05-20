@@ -6,6 +6,7 @@ class LevelState(Enum):
     PLAY = 1
     PAUSED = 2
     GAMEOVER = 3
+    NEXT_LEVEL = 4
 
 class CLevelState:
     def __init__(self, game_start_text:int) -> None:
