@@ -1,6 +1,15 @@
 {
     "game_start_sound": "assets/snd/game_start.ogg",
     "game_pause_sound": "assets/snd/game_paused.ogg",
+    "game_over_sound": "assets/snd/game_over.ogg",
+    "time_to_next_level": 4.0,
+    "level_flag":{
+        "image": "assets/img/invaders_level_flag.png",
+        "position": {
+            "x": 193,
+            "y": 27
+        }
+    },
     "enemy_spawn_events": [
         {
             "time": 0.0,

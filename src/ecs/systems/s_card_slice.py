@@ -13,7 +13,7 @@ def system_card_slice(ecs_world:esper.World, skip_intro:bool) -> bool:
 
         if cc_s.started:
             c_v.vel.y = cc_s.vel
-            _outside(cc_s,c_t,c_v,ecs_world,card, skip_intro)
+            skip_intro = _outside(cc_s,c_t,c_v,ecs_world,card, skip_intro)
         else:
             cc_s.started = True
             c_t.pos.y = cc_s.start_pos
@@ -21,12 +21,14 @@ def system_card_slice(ecs_world:esper.World, skip_intro:bool) -> bool:
     return skip_intro
 
 
-def _outside(cc_s:CCardSlice,c_t:CTransform, c_v:CVelocity, ecs_word:esper.World, card, skip_intro:bool):
+def _outside(cc_s:CCardSlice,c_t:CTransform, c_v:CVelocity, ecs_word:esper.World, card, skip_intro:bool) -> bool:
 
     if c_t.pos.y <= cc_s.outside_pos or skip_intro == True:
                 c_t.pos.y = cc_s.outside_pos
                 c_v.vel.y = 0
                 ecs_word.remove_component(card, CCardSlice)
+                skip_intro = True
+    return skip_intro
 
     
     

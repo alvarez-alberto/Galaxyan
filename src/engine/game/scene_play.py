@@ -8,10 +8,9 @@ from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_ene
 from src.ecs.systems.s_collision_bulletenemy_player import system_collision_bulletenemy_player
 from src.ecs.systems.s_explosion_state import system_explosion_state
 from src.ecs.systems.s_level_state import system_level_state
+from src.ecs.systems.s_next_level import system_next_level
 from src.ecs.systems.s_player_spawn import system_player_spawn
 from src.ecs.systems.s_starfield import system_starfield
-from src.ecs.components.c_velocity import CVelocity
-from src.ecs.components.tag.c_tag_bullet import CTagBullet
 from src.ecs.systems.s_fire_bullet import system_fire_bullet
 from src.ecs.systems.s_movement import system_movement
 from src.ecs.systems.s_screen_bullet import system_screen_bullet
@@ -24,9 +23,9 @@ from src.ecs.systems.s_enemy_spawner import system_enemy_spawner
 from src.ecs.systems.s_screen_limit_enemy_bullet import system_screen_limit_enemy_bullet
 from src.ecs.systems.s_animation import system_animation
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
-from src.create.util_creator import crear_input_player, create_hi_score_text, create_max_score_text, create_score_value, create_stars_background, create_up_text
-from src.create.enemy_creator import create_spawn, create_spawn_enemy_bullet
-from src.create.play_creator import create_bullet, create_game_start_text, create_paused_text, create_player
+from src.create.util_creator import crear_input_player, create_hi_score_text, create_level_count, create_level_flag, create_max_score_text, create_score_value, create_stars_background, create_up_text
+from src.create.enemy_creator import create_spawn_enemy_bullet
+from src.create.play_creator import create_bullet, create_game_start_text, create_get_ready_text, create_level_complete_text, create_paused_text, create_player
 from src.engine.scenes.scene import Scene
 from src.engine.service_locator import ServiceLocator
 
@@ -52,12 +51,16 @@ class ScenePlay(Scene):
         create_max_score_text(self.ecs_world)
         create_score_value(self.ecs_world)
         create_stars_background(self.ecs_world)
+        create_level_flag(self.ecs_world, self.level_01_cfg["level_flag"])
+        self.level_count_entity = create_level_count(self.ecs_world, 1)
         self.sp_bullet_entity = create_spawn_enemy_bullet(self.ecs_world, self.bullets_cfg["enemy"])
         self.pl_entity, self.pl_tr, self.pl_v, self.pl_tg, self.pl_st, self.pl_input_v = create_player(self.ecs_world)
         create_bullet(self.ecs_world,self.pl_entity,self.bullets_cfg)
         crear_input_player(self.ecs_world)
         self.game_start_text = create_game_start_text(self.ecs_world)
         self.pause_text = create_paused_text(self.ecs_world)
+        self.level_complete_ent = create_level_complete_text(self.ecs_world)
+        self.get_ready_ent = create_get_ready_text(self.ecs_world)
 
         self.pause_surface = self.ecs_world.component_for_entity(component_type=CSurface, entity=self.pause_text)
         self.pause_blink = self.ecs_world.component_for_entity(component_type=CBlink,entity=self.pause_text)
@@ -70,8 +73,8 @@ class ScenePlay(Scene):
 
     def do_update(self, delta_time: float,screen:pygame.Surface):
 
-        system_level_state(self.ecs_world, self.c_level_state,self.level_01_cfg, delta_time, self.pl_entity)
-        if self.c_level_state.state == LevelState.PLAY:
+        system_level_state(self.ecs_world, self.c_level_state,self.level_01_cfg, delta_time, self.pl_entity, self.level_complete_ent, self.get_ready_ent, self.level_count_entity)
+        if self.c_level_state.state != LevelState.PAUSED:
             system_movement(self.ecs_world,delta_time) 
             system_screen_player(self.ecs_world,screen)
             self.delete_bullet_player = system_screen_bullet(self.ecs_world,screen,self.pl_entity,self.bullets_cfg, self.delete_bullet_player, self.pl_entity, self.bullets_cfg)
@@ -85,7 +88,8 @@ class ScenePlay(Scene):
             system_explosion_state(self.ecs_world)
             system_animation(self.ecs_world, delta_time)
             system_screen_limit_enemy_bullet(self.ecs_world, self.screen_rect, self.sp_bullet_entity)
-            system_player_spawn(self.ecs_world, self.player_cfg["pos"]["x"], self.player_cfg["pos"]["y"], delta_time)
+            system_player_spawn(self.ecs_world, self.player_cfg["pos"]["x"], self.player_cfg["pos"]["y"], self.c_level_state, delta_time)
+            system_next_level(self.ecs_world, self.c_level_state, self.level_count_entity)
         
         system_starfield(self.ecs_world, delta_time)
         system_blink(self.ecs_world, delta_time)
@@ -108,10 +112,12 @@ class ScenePlay(Scene):
                 
 
         if action.name == "PLAYER_FIRE":
-            if action.phase == CommandPhase.START: 
+            if action.phase == CommandPhase.START and self.c_level_state.state == LevelState.PLAY: 
                 ServiceLocator.sounds_service.play(self.bullets_cfg["player"]["sound"])        
                 system_fire_bullet(self.ecs_world,self.bullets_cfg["player"]["velocity"])
-              
+            elif self.c_level_state.state == LevelState.GAMEOVER:
+                self.switch_scene("MENU_SCENE")
+                ServiceLocator.score_service.reset_current_score()      
 
         if action.name == "PLAYER_PAUSE":
             if action.phase == CommandPhase.START:                
