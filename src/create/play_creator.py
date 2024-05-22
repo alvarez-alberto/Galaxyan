@@ -4,6 +4,7 @@ import esper
 from src.create.util_creator import create_sprite, create_text
 from src.ecs.components.c_blink import CBlink
 from src.ecs.components.c_bullet_state import CBulletState
+from src.ecs.components.tag.c_tag_lives import CTagLives
 from src.ecs.components.c_player_state import CPlayerState
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
@@ -14,9 +15,7 @@ from src.engine.service_locator import ServiceLocator
 
 
 def create_player(ecs_world: esper.World):
-
     player_cfg = ServiceLocator.configs_service.load_config("assets/cfg/player.json")
-
     surface = ServiceLocator.images_service.get(player_cfg["image"])
     pos = pygame.Vector2(player_cfg["pos"]["x"],  
                          player_cfg["pos"]["y"])
@@ -30,6 +29,14 @@ def create_player(ecs_world: esper.World):
     player_tag = ecs_world.component_for_entity(player_entity, CTagPlayer)
     player_state = ecs_world.component_for_entity(player_entity, CPlayerState)
     return (player_entity, player_tr, player_v, player_tag, player_state,player_input_velocity)
+
+def create_player_lives(ecs_world: esper.World, level_info: dict):  
+    surface = ServiceLocator.images_service.get(level_info["image"])
+    pos = pygame.Vector2(level_info["position"]["x"], level_info["position"]["y"])
+    vel = pygame.Vector2(0, 0)
+    player_live = create_sprite(ecs_world, pos, vel, surface)
+    ecs_world.add_component(player_live, CTagLives())
+    return player_live
 
 def create_bullet(ecs_world: esper.World,  player_entity: int, bullet_cfg: dict):
     
