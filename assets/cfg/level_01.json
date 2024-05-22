@@ -10,6 +10,13 @@
             "y": 27
         }
     },
+    "player_lives":{
+        "image": "assets/img/invaders_life.png",
+        "position": {
+            "x": 170,
+            "y": 27
+        }
+    },
     "enemy_spawn_events": [
         {
             "time": 0.0,

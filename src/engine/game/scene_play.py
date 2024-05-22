@@ -25,7 +25,7 @@ from src.ecs.systems.s_animation import system_animation
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
 from src.create.util_creator import crear_input_player, create_hi_score_text, create_level_count, create_level_flag, create_max_score_text, create_score_value, create_stars_background, create_up_text
 from src.create.enemy_creator import create_spawn_enemy_bullet
-from src.create.play_creator import create_bullet, create_game_start_text, create_get_ready_text, create_level_complete_text, create_paused_text, create_player
+from src.create.play_creator import create_bullet, create_game_start_text, create_get_ready_text, create_level_complete_text, create_paused_text, create_player, create_player_lives
 from src.engine.scenes.scene import Scene
 from src.engine.service_locator import ServiceLocator
 
@@ -52,11 +52,13 @@ class ScenePlay(Scene):
         create_score_value(self.ecs_world)
         create_stars_background(self.ecs_world)
         create_level_flag(self.ecs_world, self.level_01_cfg["level_flag"])
+        create_player_lives(self.ecs_world, self.level_01_cfg["player_lives"])
         self.level_count_entity = create_level_count(self.ecs_world, 1)
         self.sp_bullet_entity = create_spawn_enemy_bullet(self.ecs_world, self.bullets_cfg["enemy"])
         self.pl_entity, self.pl_tr, self.pl_v, self.pl_tg, self.pl_st, self.pl_input_v = create_player(self.ecs_world)
         create_bullet(self.ecs_world,self.pl_entity,self.bullets_cfg)
         crear_input_player(self.ecs_world)
+
         self.game_start_text = create_game_start_text(self.ecs_world)
         self.pause_text = create_paused_text(self.ecs_world)
         self.level_complete_ent = create_level_complete_text(self.ecs_world)
